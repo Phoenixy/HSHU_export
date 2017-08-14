@@ -23,13 +23,13 @@ namespace HearthstoneCollectionExporter
                 var goldenCollection = Reflection.GetCollection().Where(x => x.Premium);
                 var commonCollection = Reflection.GetCollection().Where(x => !x.Premium);
 
-                using (var textWriter = new StreamWriter("cards.csv"))
+                using (var textWriter = new StreamWriter("cards.txt"))
                 {
                     var csv = new CsvWriter(textWriter);
 
                     // Write headers
                     csv.WriteField("Id");
-                    csv.WriteField("Name");
+                    /*csv.WriteField("Name");
                     csv.WriteField("Class");
                     csv.WriteField("Rarity");
                     csv.WriteField("Mana");
@@ -39,13 +39,13 @@ namespace HearthstoneCollectionExporter
                     csv.WriteField("Attack");
                     csv.WriteField("Card Count - Normal");
                     csv.WriteField("Card Count - Golden");
-                    csv.WriteField("Set");
+                    csv.WriteField("Set");*/
                     csv.NextRecord();
 
                     foreach (var dbCard in Cards.Collectible)
                     {
                         csv.WriteField(dbCard.Key); // Id
-                        csv.WriteField(dbCard.Value.Name);
+                       /* csv.WriteField(dbCard.Value.Name);
                         csv.WriteField(dbCard.Value.Class);
                         csv.WriteField(dbCard.Value.Rarity);
                         csv.WriteField(dbCard.Value.Cost); // Mana
@@ -59,7 +59,7 @@ namespace HearthstoneCollectionExporter
                         { 
                             csv.WriteField(dbCard.Value.Race);
 
-                        }
+                        }*/
 
                         csv.WriteField(dbCard.Value.Health);
                         csv.WriteField(dbCard.Value.Attack);
@@ -69,22 +69,24 @@ namespace HearthstoneCollectionExporter
                         var amountGolden =
                             goldenCollection.Where(x => x.Id.Equals(dbCard.Key)).Select(x => x.Count).FirstOrDefault();
                         csv.WriteField(amountNormal);
+                        csv.WriteField(";");
                         csv.WriteField(amountGolden);
-
+                        csv.WriteField(";");
                         csv.WriteField(dbCard.Value.Set);
 
+                        csv.WriteField(" - ");
                         csv.NextRecord();
                     }
                 }
-                MessageBox.Show("Finished exporting cards to cards.csv.", "Success");
+                MessageBox.Show("Sikeres exportálás cards.txt-be.", "Sikeres!");
             }
             else if (status == HearthMirror.Enums.MirrorStatus.ProcNotFound)
             {
-                MessageBox.Show("Unable to find Hearthstone the process.", "Error");
+                MessageBox.Show("Nem található Hearthstone folyamat.", "Hiba!");
             }
             else if (status == HearthMirror.Enums.MirrorStatus.Error)
             {
-                MessageBox.Show("There was a problem finding the Hearthstone process.", "Error");
+                MessageBox.Show("Hiba történt.", "Hiba!");
             }
         }
     }
